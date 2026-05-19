@@ -1,11 +1,25 @@
-.intro-root {
+.app {
+  position: relative;
+  min-height: 100dvh;
+  isolation: isolate;
+}
+
+.site-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 50;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  padding: 2rem;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.site-backdrop--image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(var(--bg-blur, 0px));
+  transform: scale(1.08);
+}
+
+.site-backdrop--fallback {
   background: radial-gradient(
       circle at 30% 20%,
       color-mix(in oklab, var(--accent) 55%, transparent),
@@ -17,6 +31,25 @@
       transparent 50%
     ),
     #0f172a;
+}
+
+.site-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--overlay-tint);
+}
+
+.intro-root {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 2rem;
+  background: transparent;
 }
 
 .intro-root.intro-fade-scale .intro-inner {
@@ -34,18 +67,20 @@
 }
 
 .intro-title {
-  font-family: var(--font-heading);
+  font-family: var(--font-intro-title);
   font-size: clamp(2.4rem, 6vw, 3.6rem);
   font-weight: 700;
   letter-spacing: 0.02em;
   margin: 0 0 0.75rem;
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.65);
 }
 
 .intro-sub {
-  font-family: var(--font-body);
+  font-family: var(--font-intro-sub);
   font-size: clamp(1rem, 2.4vw, 1.2rem);
-  opacity: 0.88;
+  opacity: 0.95;
   margin: 0;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.55);
 }
 
 @keyframes introFadeScale {
@@ -80,41 +115,26 @@
 }
 
 .page {
-  min-height: 100%;
   position: relative;
-  overflow: hidden;
+  z-index: 2;
+  min-height: 100dvh;
   font-family: var(--font-body);
-}
-
-.page__bg {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  filter: blur(var(--bg-blur, 0px));
-  transform: scale(1.06);
-}
-
-.page__overlay {
-  position: absolute;
-  inset: 0;
-  background: var(--overlay-tint);
 }
 
 .page__content {
   position: relative;
-  z-index: 1;
-  min-height: 100%;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: clamp(1rem, 4vw, 2.5rem);
+  padding-top: calc(clamp(1rem, 4vw, 2.5rem) + var(--friends-offset-y, 0vh));
   gap: 1.25rem;
 }
 
 .page__title {
-  font-family: var(--font-heading);
+  font-family: var(--font-friends-title);
   font-size: clamp(1.5rem, 4vw, 2.25rem);
   margin: 0;
   text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
@@ -126,14 +146,34 @@
   font-size: 0.95rem;
   max-width: 28rem;
   text-align: center;
+  font-family: var(--font-friends-hint);
 }
 
 .face-grid {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   gap: var(--grid-gap, 20px);
-  max-width: 40rem;
+  width: 100%;
+  max-width: var(--friends-max-width, 40rem);
+  justify-content: var(--friends-justify, center);
+  align-items: center;
+}
+
+.face-grid--wrap {
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.face-grid--row {
+  flex-wrap: nowrap;
+  flex-direction: row;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  justify-content: var(--friends-justify, center);
+}
+
+.face-grid--column {
+  flex-direction: column;
+  flex-wrap: nowrap;
 }
 
 .face-button {
@@ -176,7 +216,7 @@
   border: 4px solid var(--avatar-ring, #fff);
   display: grid;
   place-items: center;
-  font-family: var(--font-heading);
+  font-family: var(--font-friends-title);
   font-weight: 700;
   font-size: calc(var(--avatar-size, 104px) * 0.32);
   background: linear-gradient(
@@ -240,7 +280,7 @@
 }
 
 .modal__title {
-  font-family: var(--font-heading);
+  font-family: var(--font-modal-title);
   font-size: 1.45rem;
   margin: 0 0 0.35rem;
   padding-right: 2.5rem;
@@ -251,6 +291,7 @@
   line-height: 1.55;
   white-space: pre-wrap;
   opacity: 0.95;
+  font-family: var(--font-modal-note);
 }
 
 .player-row {
@@ -268,12 +309,26 @@
 .track-meta__title {
   font-weight: 600;
   margin: 0 0 0.15rem;
+  font-family: var(--font-modal-track);
 }
 
 .track-meta__artist {
   margin: 0;
   opacity: 0.75;
   font-size: 0.9rem;
+  font-family: var(--font-modal-track);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .vinyl-wrap {

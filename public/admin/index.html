@@ -10,9 +10,19 @@
   <body>
     <script>
       if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", (user) => {
+        window.netlifyIdentity.on("init", function (user) {
+          var hash = window.location.hash || "";
+          if (
+            !user &&
+            (hash.indexOf("recovery_token=") !== -1 ||
+              hash.indexOf("invite_token=") !== -1 ||
+              hash.indexOf("confirmation_token=") !== -1)
+          ) {
+            window.netlifyIdentity.open("login");
+            return;
+          }
           if (!user) {
-            window.netlifyIdentity.on("login", () => {
+            window.netlifyIdentity.on("login", function () {
               document.location.href = "/admin/";
             });
           }

@@ -7,11 +7,12 @@ import {
   type CSSProperties,
 } from "react";
 import confetti from "canvas-confetti";
-import settingsJson from "../content/settings.json";
 import type { ConfettiIntensity, Friend, SiteSettings } from "./types";
+import { getSettings } from "./settings";
+import { hasText, objectPosition, resolveFont } from "./utils";
 import "./App.css";
 
-const settings = settingsJson as SiteSettings;
+const settings = getSettings();
 
 const friendModules = import.meta.glob<{ default: Friend }>(
   "../content/friends/*.json",
@@ -60,26 +61,51 @@ function fireConfetti(intensity: ConfettiIntensity) {
   }, 260);
 }
 
+function layoutClass(layout: SiteSettings["friendsLayout"]) {
+  if (layout === "single-row") return "face-grid--row";
+  if (layout === "column") return "face-grid--column";
+  return "face-grid--wrap";
+}
+
 export default function App() {
   const [phase, setPhase] = useState<"intro" | "main">("intro");
   const [active, setActive] = useState<Friend | null>(null);
   const introTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    document.title = settings.documentTitle;
+    document.title = hasText(settings.documentTitle)
+      ? settings.documentTitle.trim()
+      : "Birthday";
+  }, []);
+
+  useEffect(() => {
+    if (!settings.confettiEnabled) return;
+
+    const burstMs = 450;
+    const t1 = window.setTimeout(() => fireConfetti(settings.confettiIntensity), burstMs);
+    const t2 = window.setTimeout(
+      () => fireConfetti(settings.confettiIntensity),
+      burstMs + 900,
+    );
+
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+    };
   }, []);
 
   useEffect(() => {
     introTimer.current = window.setTimeout(() => {
       setPhase("main");
-      if (settings.confettiEnabled) {
-        fireConfetti(settings.confettiIntensity);
-      }
     }, settings.introDurationMs);
     return () => {
       if (introTimer.current) window.clearTimeout(introTimer.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (phase === "intro") setActive(null);
+  }, [phase]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -92,8 +118,34 @@ export default function App() {
   const rootVars = useMemo(
     () =>
       ({
-        "--font-heading": settings.fontHeading,
-        "--font-body": settings.fontBody,
+        "--font-intro-title": resolveFont(
+          settings.fontIntroTitle,
+          settings.fontIntroTitleCustom,
+        ),
+        "--font-intro-sub": resolveFont(
+          settings.fontIntroSubtitle,
+          settings.fontIntroSubtitleCustom,
+        ),
+        "--font-friends-title": resolveFont(
+          settings.fontFriendsTitle,
+          settings.fontFriendsTitleCustom,
+        ),
+        "--font-friends-hint": resolveFont(
+          settings.fontFriendsHint,
+          settings.fontFriendsHintCustom,
+        ),
+        "--font-modal-title": resolveFont(
+          settings.fontModalTitle,
+          settings.fontModalTitleCustom,
+        ),
+        "--font-modal-note": resolveFont(
+          settings.fontModalNote,
+          settings.fontModalNoteCustom,
+        ),
+        "--font-modal-track": resolveFont(
+          settings.fontModalTrack,
+          settings.fontModalTrackCustom,
+        ),
         "--accent": settings.accentColor,
         "--accent-2": settings.accentColor2,
         "--surface": settings.surfaceColor,
@@ -104,6 +156,9 @@ export default function App() {
         "--overlay-tint": settings.overlayTint,
         "--bg-blur": `${settings.backgroundBlurPx}px`,
         "--vinyl-spin": `${settings.vinylSpinDurationSec}s`,
+        "--friends-justify": settings.friendsJustify,
+        "--friends-max-width": `${settings.friendsMaxWidthPx}px`,
+        "--friends-offset-y": `${settings.friendsOffsetYVh}vh`,
       }) as CSSProperties,
     [],
   );
@@ -115,51 +170,87 @@ export default function App() {
         ? "intro-slide-up"
         : "intro-fade-scale";
 
-  const bgStyle = useMemo(() => {
+  const bgStyle = useMemo((): CSSProperties | undefined => {
     if (!settings.backgroundImage) return undefined;
-    return { backgroundImage: `url(${settings.backgroundImage})` };
+    return {
+      backgroundImage: `url(${settings.backgroundImage})`,
+      backgroundPosition: objectPosition(
+        settings.backgroundPositionX,
+        settings.backgroundPositionY,
+      ),
+    };
   }, []);
+
+  const hasBackground = Boolean(settings.backgroundImage);
+  const showIntroTitle = hasText(settings.introTitle);
+  const showIntroSub = hasText(settings.introSubtitle);
+  const showFriendsTitle = hasText(settings.friendsPageTitle);
+  const showFriendsHint = hasText(settings.friendsPageHint);
 
   return (
     <div className="app" style={rootVars}>
+      <div
+        className={
+          "site-backdrop" + (hasBackground ? " site-backdrop--image" : " site-backdrop--fallback")
+        }
+        style={bgStyle}
+        aria-hidden
+      />
+      <div className="site-overlay" aria-hidden />
+
       {phase === "intro" ? (
         <div className={`intro-root ${introClass}`} role="status" aria-live="polite">
           <div className="intro-inner">
-            <h1 className="intro-title">{settings.introTitle}</h1>
-            <p className="intro-sub">{settings.introSubtitle}</p>
+            {showIntroTitle ? (
+              <h1 className="intro-title">{settings.introTitle.trim()}</h1>
+            ) : null}
+            {showIntroSub ? (
+              <p className="intro-sub">{settings.introSubtitle.trim()}</p>
+            ) : null}
           </div>
         </div>
       ) : null}
 
-      <main className="page">
-        <div className="page__bg" style={bgStyle} aria-hidden />
-        <div className="page__overlay" aria-hidden />
-        <div className="page__content">
-          <h2 className="page__title">Friends</h2>
-          <p className="page__hint">Choose a face to open a note and spin the record.</p>
-          <div className="face-grid">
-            {friends.map((f) => (
-              <button
-                key={f.slug}
-                type="button"
-                className="face-button"
-                onClick={() => setActive(f)}
-                aria-label={`Open message from ${f.name}`}
-              >
-                {f.photo ? (
-                  <img className="face" src={f.photo} alt="" />
-                ) : (
-                  <span className="face-placeholder" aria-hidden>
-                    {initials(f.name)}
-                  </span>
-                )}
-              </button>
-            ))}
+      {phase === "main" ? (
+        <main className="page">
+          <div className="page__content">
+            {showFriendsTitle ? (
+              <h2 className="page__title">{settings.friendsPageTitle.trim()}</h2>
+            ) : null}
+            {showFriendsHint ? (
+              <p className="page__hint">{settings.friendsPageHint.trim()}</p>
+            ) : null}
+            <div className={`face-grid ${layoutClass(settings.friendsLayout)}`}>
+              {friends.map((f) => (
+                <button
+                  key={f.slug}
+                  type="button"
+                  className="face-button"
+                  onClick={() => setActive(f)}
+                  aria-label={`Open message from ${f.name || f.slug}`}
+                >
+                  {f.photo ? (
+                    <img
+                      className="face"
+                      src={f.photo}
+                      alt=""
+                      style={{
+                        objectPosition: objectPosition(f.photoFocusX, f.photoFocusY),
+                      }}
+                    />
+                  ) : (
+                    <span className="face-placeholder" aria-hidden>
+                      {initials(f.name || f.slug)}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      ) : null}
 
-      {active ? (
+      {phase === "main" && active ? (
         <FriendModal
           friend={active}
           onClose={() => setActive(null)}
@@ -190,6 +281,13 @@ function FriendModal({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+
+  const showName =
+    friend.showNameInModal !== false && hasText(friend.name);
+  const showNote = hasText(friend.note);
+  const showSongTitle = hasText(friend.songTitle);
+  const showArtist = hasText(friend.songArtist);
+  const showTrackMeta = showSongTitle || showArtist;
 
   useEffect(() => {
     setPlaying(false);
@@ -236,6 +334,10 @@ function FriendModal({
   const backdropClass =
     "modal-backdrop" + (modalBackdropBlur ? " modal-backdrop--blur" : "");
 
+  const dialogLabel = showName
+    ? `friend-title-${friend.slug}`
+    : `friend-dialog-${friend.slug}`;
+
   return (
     <div
       className={backdropClass}
@@ -248,15 +350,21 @@ function FriendModal({
         className={modalClass}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={`friend-title-${friend.slug}`}
+        aria-labelledby={dialogLabel}
       >
         <button type="button" className="modal__close" onClick={onClose} aria-label="Close">
           ×
         </button>
-        <h3 className="modal__title" id={`friend-title-${friend.slug}`}>
-          {friend.name}
-        </h3>
-        <p className="modal__note">{friend.note}</p>
+        {showName ? (
+          <h3 className="modal__title" id={dialogLabel}>
+            {friend.name.trim()}
+          </h3>
+        ) : (
+          <span id={dialogLabel} className="sr-only">
+            Message
+          </span>
+        )}
+        {showNote ? <p className="modal__note">{friend.note.trim()}</p> : null}
 
         <div className="player-row">
           <div className="vinyl-wrap">
@@ -272,22 +380,32 @@ function FriendModal({
             >
               <span className="vinyl__label">
                 {friend.discImage ? (
-                  <img src={friend.discImage} alt="" />
+                  <img
+                    src={friend.discImage}
+                    alt=""
+                    style={{
+                      objectPosition: objectPosition(friend.discFocusX, friend.discFocusY),
+                    }}
+                  />
                 ) : (
                   <span aria-hidden style={{ fontSize: "0.75rem", fontWeight: 700 }}>
-                    {initials(friend.name)}
+                    {initials(friend.name || friend.slug)}
                   </span>
                 )}
               </span>
               <span className="vinyl__hole" aria-hidden />
             </button>
           </div>
-          <div className="track-meta">
-            <p className="track-meta__title">{friend.songTitle}</p>
-            {friend.songArtist ? (
-              <p className="track-meta__artist">{friend.songArtist}</p>
-            ) : null}
-          </div>
+          {showTrackMeta ? (
+            <div className="track-meta">
+              {showSongTitle ? (
+                <p className="track-meta__title">{friend.songTitle.trim()}</p>
+              ) : null}
+              {showArtist ? (
+                <p className="track-meta__artist">{friend.songArtist!.trim()}</p>
+              ) : null}
+            </div>
+          ) : null}
         </div>
 
         {friend.song ? (

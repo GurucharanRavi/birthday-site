@@ -2,6 +2,11 @@ backend:
   name: git-gateway
   branch: main
 
+# Opens your live site from the Admin toolbar (Preview). Update if your URL changes.
+site_url: https://hbdrrs.netlify.app
+display_url: https://hbdrrs.netlify.app
+show_preview_links: true
+
 media_folder: public/uploads
 public_folder: /uploads
 
@@ -13,9 +18,20 @@ collections:
         name: global
         file: content/settings.json
         fields:
-          - { label: Browser tab title, name: documentTitle, widget: string }
-          - { label: Intro big title, name: introTitle, widget: string }
-          - { label: Intro subtitle, name: introSubtitle, widget: string }
+          - {
+              label: Intro title,
+              name: introTitle,
+              widget: string,
+              required: false,
+              hint: "Leave blank to hide. After Publish, use Preview in the Admin toolbar to see the live site.",
+            }
+          - {
+              label: Intro subtitle,
+              name: introSubtitle,
+              widget: string,
+              required: false,
+              hint: "Leave blank to hide.",
+            }
           - {
               label: Intro duration (milliseconds),
               name: introDurationMs,
@@ -32,7 +48,7 @@ collections:
               - { label: Fade + gentle scale, value: fade-scale }
               - { label: Fade only, value: fade }
               - { label: Slide up, value: slide-up }
-          - { label: Confetti on enter, name: confettiEnabled, widget: boolean }
+          - { label: Confetti during intro, name: confettiEnabled, widget: boolean }
           - label: Confetti amount
             name: confettiIntensity
             widget: select
@@ -40,7 +56,68 @@ collections:
               - { label: Light, value: light }
               - { label: Medium, value: medium }
               - { label: Heavy, value: heavy }
+          - label: Font · intro title
+            name: fontIntroTitle
+            widget: select
+            options: &font_presets
+              - {
+                  label: Playfair Display,
+                  value: "'Playfair Display', Georgia, serif",
+                }
+              - {
+                  label: Fraunces,
+                  value: "'Fraunces', 'Palatino Linotype', serif",
+                }
+              - { label: Cormorant Garamond, value: "'Cormorant Garamond', Georgia, serif" }
+              - { label: Libre Baskerville, value: "'Libre Baskerville', Georgia, serif" }
+              - { label: Lora, value: "'Lora', Georgia, serif" }
+              - { label: Great Vibes (script), value: "'Great Vibes', cursive" }
+              - { label: Pacifico (script), value: "'Pacifico', cursive" }
+              - { label: Poppins, value: "'Poppins', system-ui, sans-serif" }
+              - { label: Montserrat, value: "'Montserrat', system-ui, sans-serif" }
+              - { label: DM Sans, value: "'DM Sans', system-ui, sans-serif" }
+              - { label: Raleway, value: "'Raleway', system-ui, sans-serif" }
+              - { label: Oswald, value: "'Oswald', system-ui, sans-serif" }
+              - { label: Georgia, value: "Georgia, serif" }
+              - { label: System UI, value: "system-ui, sans-serif" }
+          - {
+              label: Custom font · intro title (overrides dropdown),
+              name: fontIntroTitleCustom,
+              widget: string,
+              required: false,
+              hint: "Paste any CSS font-family, e.g. 'My Font', sans-serif",
+            }
+          - label: Font · intro subtitle
+            name: fontIntroSubtitle
+            widget: select
+            options: *font_presets
+          - {
+              label: Custom font · intro subtitle,
+              name: fontIntroSubtitleCustom,
+              widget: string,
+              required: false,
+            }
+
           - { label: Background image, name: backgroundImage, widget: image, required: false }
+          - {
+              label: Background focus horizontal (%),
+              name: backgroundPositionX,
+              widget: number,
+              value_type: int,
+              min: 0,
+              max: 100,
+              step: 1,
+              hint: "Which part of the photo is centered (left 0 → right 100).",
+            }
+          - {
+              label: Background focus vertical (%),
+              name: backgroundPositionY,
+              widget: number,
+              value_type: int,
+              min: 0,
+              max: 100,
+              step: 1,
+            }
           - {
               label: Background blur (px),
               name: backgroundBlurPx,
@@ -51,39 +128,81 @@ collections:
               step: 1,
             }
           - {
-              label: Dark overlay (CSS color / rgba),
+              label: Dark overlay (CSS rgba),
               name: overlayTint,
               widget: string,
-              hint: "Example rgba(15,23,42,0.55)",
+              required: false,
             }
-          - label: Heading font stack
-            name: fontHeading
+
+          - {
+              label: Section title,
+              name: friendsPageTitle,
+              widget: string,
+              required: false,
+              hint: "Leave blank to hide.",
+            }
+          - {
+              label: Section hint / subtitle,
+              name: friendsPageHint,
+              widget: string,
+              required: false,
+              hint: "Leave blank to hide.",
+            }
+          - label: Font · friends section title
+            name: fontFriendsTitle
+            widget: select
+            options: *font_presets
+          - {
+              label: Custom font · friends title,
+              name: fontFriendsTitleCustom,
+              widget: string,
+              required: false,
+            }
+          - label: Font · friends hint
+            name: fontFriendsHint
+            widget: select
+            options: *font_presets
+          - {
+              label: Custom font · friends hint,
+              name: fontFriendsHintCustom,
+              widget: string,
+              required: false,
+            }
+          - label: Faces layout
+            name: friendsLayout
             widget: select
             options:
-              - {
-                  label: Playfair Display,
-                  value: "'Playfair Display', Georgia, serif",
-                }
-              - {
-                  label: Fraunces,
-                  value: "'Fraunces', 'Palatino Linotype', serif",
-                }
-              - { label: Georgia, value: "Georgia, serif" }
-              - { label: System serif, value: "ui-serif, Georgia, serif" }
-          - label: Body font stack
-            name: fontBody
+              - { label: Wrapped grid (default), value: wrap }
+              - { label: Single horizontal row (scroll on small screens), value: single-row }
+              - { label: Vertical column, value: column }
+          - label: Horizontal alignment of faces
+            name: friendsJustify
             widget: select
             options:
-              - {
-                  label: DM Sans,
-                  value: "'DM Sans', system-ui, sans-serif",
-                }
-              - { label: System UI, value: "system-ui, sans-serif" }
-          - { label: Accent color, name: accentColor, widget: string }
-          - { label: Second accent, name: accentColor2, widget: string }
-          - { label: Card / modal surface tint, name: surfaceColor, widget: string }
-          - { label: Text on cards, name: textOnSurface, widget: string }
-          - { label: Avatar ring color, name: avatarRingColor, widget: string }
+              - { label: Center, value: center }
+              - { label: Left, value: flex-start }
+              - { label: Right, value: flex-end }
+              - { label: Space between, value: space-between }
+              - { label: Space around, value: space-around }
+          - {
+              label: Push faces down (vh),
+              name: friendsOffsetYVh,
+              widget: number,
+              value_type: int,
+              min: 0,
+              max: 45,
+              step: 1,
+              hint: "0 = vertically centered. Higher = lower on screen.",
+            }
+          - {
+              label: Max width of face group (px),
+              name: friendsMaxWidthPx,
+              widget: number,
+              value_type: int,
+              min: 280,
+              max: 1200,
+              step: 20,
+            }
           - {
               label: Avatar size (px),
               name: avatarSizePx,
@@ -102,6 +221,38 @@ collections:
               max: 48,
               step: 2,
             }
+          - { label: Avatar ring color, name: avatarRingColor, widget: string, required: false }
+
+          - label: Font · modal name
+            name: fontModalTitle
+            widget: select
+            options: *font_presets
+          - {
+              label: Custom font · modal name,
+              name: fontModalTitleCustom,
+              widget: string,
+              required: false,
+            }
+          - label: Font · modal note
+            name: fontModalNote
+            widget: select
+            options: *font_presets
+          - {
+              label: Custom font · modal note,
+              name: fontModalNoteCustom,
+              widget: string,
+              required: false,
+            }
+          - label: Font · song title / artist
+            name: fontModalTrack
+            widget: select
+            options: *font_presets
+          - {
+              label: Custom font · song info,
+              name: fontModalTrackCustom,
+              widget: string,
+              required: false,
+            }
           - { label: Modal frosted blur, name: modalBackdropBlur, widget: boolean }
           - label: Modal style
             name: modalStyle
@@ -110,7 +261,7 @@ collections:
               - { label: Glass, value: glass }
               - { label: Solid, value: solid }
           - {
-              label: Vinyl spin loop (seconds per rotation),
+              label: Vinyl spin (seconds per rotation),
               name: vinylSpinDurationSec,
               widget: number,
               value_type: float,
@@ -120,6 +271,17 @@ collections:
             }
           - { label: Vinyl idle pulse, name: vinylIdlePulse, widget: boolean }
 
+          - {
+              label: Browser tab title,
+              name: documentTitle,
+              widget: string,
+              required: false,
+            }
+          - { label: Accent color, name: accentColor, widget: string, required: false }
+          - { label: Second accent, name: accentColor2, widget: string, required: false }
+          - { label: Modal surface tint, name: surfaceColor, widget: string, required: false }
+          - { label: Text on modal, name: textOnSurface, widget: string, required: false }
+
   - name: friends
     label: Friends
     folder: content/friends
@@ -128,8 +290,8 @@ collections:
     identifier_field: slug
     summary: "{{name}} · order {{order}}"
     fields:
-      - { label: Display name, name: name, widget: string }
-      - { label: URL slug (no spaces), name: slug, widget: string, hint: "e.g. alex" }
+      - { label: Display name, name: name, widget: string, required: false }
+      - { label: URL slug, name: slug, widget: string, hint: "e.g. alex" }
       - {
           label: Order (1 = first),
           name: order,
@@ -140,13 +302,57 @@ collections:
           step: 1,
         }
       - { label: Face photo, name: photo, widget: image, required: false }
-      - { label: Personal note, name: note, widget: text }
-      - { label: Dedicated song file, name: song, widget: file, required: false }
-      - { label: Song title (shown in player), name: songTitle, widget: string }
-      - { label: Artist (optional), name: songArtist, widget: string, required: false }
       - {
-          label: Custom disc label image,
-          name: discImage,
-          widget: image,
+          label: Face crop focus · horizontal (%),
+          name: photoFocusX,
+          widget: number,
+          value_type: int,
+          min: 0,
+          max: 100,
+          default: 50,
+          hint: "Pan photo inside the circle: 0=left, 100=right.",
+        }
+      - {
+          label: Face crop focus · vertical (%),
+          name: photoFocusY,
+          widget: number,
+          value_type: int,
+          min: 0,
+          max: 100,
+          default: 50,
+        }
+      - {
+          label: Personal note,
+          name: note,
+          widget: text,
           required: false,
+          hint: "Leave blank to hide in pop-up.",
+        }
+      - { label: Show name in pop-up, name: showNameInModal, widget: boolean, default: true }
+      - { label: Song file (MP3), name: song, widget: file, required: false }
+      - {
+          label: Song title,
+          name: songTitle,
+          widget: string,
+          required: false,
+        }
+      - { label: Artist, name: songArtist, widget: string, required: false }
+      - { label: Disc label image, name: discImage, widget: image, required: false }
+      - {
+          label: Disc image focus · horizontal (%),
+          name: discFocusX,
+          widget: number,
+          value_type: int,
+          min: 0,
+          max: 100,
+          default: 50,
+        }
+      - {
+          label: Disc image focus · vertical (%),
+          name: discFocusY,
+          widget: number,
+          value_type: int,
+          min: 0,
+          max: 100,
+          default: 50,
         }

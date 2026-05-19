@@ -71,6 +71,26 @@ Log in with the invited Identity user. You should see:
 
 Every **Publish** in Decap creates a commit; Netlify rebuilds; the public site updates in about a minute.
 
+### Preview while editing
+
+Decap is **not** a live visual designer like Canva. After you **Publish**, use the **Preview** link in the Admin toolbar (configured for your Netlify URL) to open the real site. For quick tweaks, keep the public site open in another tab and refresh after each deploy.
+
+### Optional text
+
+Leave any text field **completely empty** and **Publish** — that line will not appear (intro subtitle, friends page title, notes, song titles, etc.).
+
+### Fonts
+
+Each screen area has its own font dropdown, plus an optional **Custom font** field. Paste any CSS `font-family` value there (it overrides the dropdown). Load extra fonts via [Google Fonts](https://fonts.google.com) and paste the family name, or add a `<link>` in `index.html` if you need a font not in the preset list.
+
+### Positioning the five faces
+
+Under **Site · look & feel**: layout (wrap / single row / column), horizontal alignment, **Push faces down (vh)**, max width, avatar size, and gap.
+
+### “Cropping” photos
+
+There is no drag-to-crop in Admin (Decap limitation). Use **Face crop focus** sliders on each friend (and background focus on global settings) to choose which part of the image stays in the circle/frame — like picking the focal point.
+
 ### If `/admin` is blank or errors
 
 - Confirm the site finished deploying and you are on `https://…netlify.app/admin` (not localhost for the real CMS login).
