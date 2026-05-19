@@ -47,6 +47,6 @@
   "backgroundBlurPx": 8,
   "fontModalTrackCustom": "",
   "fontFriendsHintCustom": "",
-  "friendsLayout": "row",
+  "friendsLayout": "wrap",
   "friendsMaxWidthPx": 640
 }
