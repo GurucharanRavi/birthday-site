@@ -416,9 +416,42 @@
   cursor: pointer;
   border: none;
   padding: 0;
-  background: radial-gradient(circle, #111 0 32%, #0a0a0a 32% 36%, #141414 36% 40%, #0a0a0a 40% 44%, #121212 44% 48%, #080808 48% 52%, #101010 52% 56%, #070707 56% 60%, #0f0f0f 60% 64%, #050505 64% 68%, #0c0c0c 68% 72%, #040404 72% 76%, #0b0b0b 76% 80%, #030303 80% 84%, #090909 84% 88%, #020202 88% 92%, #080808 92% 96%, #111 96%);
+  background: transparent;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
   transition: transform 0.2s ease;
+}
+
+.vinyl__rotor {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    #111 0 32%,
+    #0a0a0a 32% 36%,
+    #141414 36% 40%,
+    #0a0a0a 40% 44%,
+    #121212 44% 48%,
+    #080808 48% 52%,
+    #101010 52% 56%,
+    #070707 56% 60%,
+    #0f0f0f 60% 64%,
+    #050505 64% 68%,
+    #0c0c0c 68% 72%,
+    #040404 72% 76%,
+    #0b0b0b 76% 80%,
+    #030303 80% 84%,
+    #090909 84% 88%,
+    #020202 88% 92%,
+    #080808 92% 96%,
+    #111 96%
+  );
+  animation: vinylSpin var(--vinyl-spin, 4s) linear infinite;
+  animation-play-state: paused;
+}
+
+.vinyl--playing .vinyl__rotor {
+  animation-play-state: running;
 }
 
 .vinyl--pulse:not(.vinyl--playing) {
@@ -456,10 +489,14 @@
   border-radius: 999px;
   background: #0b0b12;
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+  z-index: 1;
+  pointer-events: none;
 }
 
-.vinyl--playing {
-  animation: vinylSpin var(--vinyl-spin, 4s) linear infinite;
+@media (prefers-reduced-motion: reduce) {
+  .vinyl__rotor {
+    animation: none;
+  }
 }
 
 @keyframes vinylSpin {

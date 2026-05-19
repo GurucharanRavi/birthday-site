@@ -335,9 +335,17 @@ function FriendModal({
   useEffect(() => {
     const a = audioRef.current;
     if (!a) return;
+    const onPlay = () => setPlaying(true);
+    const onPause = () => setPlaying(false);
     const onEnd = () => setPlaying(false);
+    a.addEventListener("play", onPlay);
+    a.addEventListener("pause", onPause);
     a.addEventListener("ended", onEnd);
-    return () => a.removeEventListener("ended", onEnd);
+    return () => {
+      a.removeEventListener("play", onPlay);
+      a.removeEventListener("pause", onPause);
+      a.removeEventListener("ended", onEnd);
+    };
   }, [friend.song]);
 
   const modalClass =
@@ -389,20 +397,25 @@ function FriendModal({
               onClick={togglePlay}
               aria-label={playing ? "Pause song" : "Play song"}
             >
-              <span className="vinyl__label">
-                {friend.discImage ? (
-                  <img
-                    src={friend.discImage}
-                    alt=""
-                    style={{
-                      objectPosition: objectPosition(friend.discFocusX, friend.discFocusY),
-                    }}
-                  />
-                ) : (
-                  <span aria-hidden style={{ fontSize: "0.75rem", fontWeight: 700 }}>
-                    {initials(friend.name || friend.slug)}
-                  </span>
-                )}
+              <span className="vinyl__rotor" aria-hidden>
+                <span className="vinyl__label">
+                  {friend.discImage ? (
+                    <img
+                      src={friend.discImage}
+                      alt=""
+                      style={{
+                        objectPosition: objectPosition(
+                          friend.discFocusX,
+                          friend.discFocusY,
+                        ),
+                      }}
+                    />
+                  ) : (
+                    <span style={{ fontSize: "0.75rem", fontWeight: 700 }}>
+                      {initials(friend.name || friend.slug)}
+                    </span>
+                  )}
+                </span>
               </span>
               <span className="vinyl__hole" aria-hidden />
             </button>
