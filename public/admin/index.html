@@ -9,26 +9,43 @@
   </head>
   <body>
     <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on("init", function (user) {
-          var hash = window.location.hash || "";
-          if (
-            !user &&
-            (hash.indexOf("recovery_token=") !== -1 ||
-              hash.indexOf("invite_token=") !== -1 ||
-              hash.indexOf("confirmation_token=") !== -1)
-          ) {
-            window.netlifyIdentity.open("login");
-            return;
-          }
-          if (!user) {
-            window.netlifyIdentity.on("login", function () {
-              document.location.href = "/admin/";
-            });
-          }
+      function loadDecap() {
+        if (document.querySelector('script[data-decap]')) return;
+        var s = document.createElement("script");
+        s.src = "https://unpkg.com/decap-cms@3.3.3/dist/decap-cms.js";
+        s.setAttribute("data-decap", "true");
+        document.body.appendChild(s);
+      }
+
+      function onIdentityReady(user) {
+        var hash = window.location.hash || "";
+        var hasToken =
+          hash.indexOf("recovery_token=") !== -1 ||
+          hash.indexOf("invite_token=") !== -1 ||
+          hash.indexOf("confirmation_token=") !== -1;
+
+        if (user) {
+          loadDecap();
+          return;
+        }
+
+        if (hasToken) {
+          window.netlifyIdentity.open("login");
+        } else {
+          window.netlifyIdentity.open("login");
+        }
+
+        window.netlifyIdentity.on("login", function () {
+          document.location.href = "/admin/";
         });
       }
+
+      function bindIdentity() {
+        if (!window.netlifyIdentity) return;
+        window.netlifyIdentity.on("init", onIdentityReady);
+      }
+
+      bindIdentity();
     </script>
-    <script src="https://unpkg.com/decap-cms@3.3.3/dist/decap-cms.js"></script>
   </body>
 </html>
