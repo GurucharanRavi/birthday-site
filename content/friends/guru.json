@@ -1,0 +1,11 @@
+{
+  "showNameInModal": true,
+  "slug": "guru",
+  "order": 5,
+  "photo": "/uploads/screenshot-2026-05-19-193525.png",
+  "photoFocusX": 50,
+  "photoFocusY": 50,
+  "discFocusX": 50,
+  "song": "/uploads/leo-anbenum-lyric-thalapathy-vijay-lokesh-kanagaraj-anirudh-ravichander.mp3",
+  "discFocusY": 50
+}
