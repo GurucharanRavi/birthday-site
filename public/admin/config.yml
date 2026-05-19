@@ -2,6 +2,8 @@ backend:
   name: git-gateway
   branch: main
 
+# cms_config_version: 3 — bump when admin fields change (ignore this line)
+
 # Opens your live site from the Admin toolbar (Preview). Update if your URL changes.
 site_url: https://hbdrrs.netlify.app
 display_url: https://hbdrrs.netlify.app
@@ -76,7 +78,7 @@ collections:
           - label: Font · intro title
             name: fontIntroTitle
             widget: select
-            options: &font_presets
+            options:
               - {
                   label: Playfair Display,
                   value: "'Playfair Display', Georgia, serif",
@@ -107,7 +109,27 @@ collections:
           - label: Font · intro subtitle
             name: fontIntroSubtitle
             widget: select
-            options: *font_presets
+            options:
+              - {
+                  label: Playfair Display,
+                  value: "'Playfair Display', Georgia, serif",
+                }
+              - {
+                  label: Fraunces,
+                  value: "'Fraunces', 'Palatino Linotype', serif",
+                }
+              - { label: Cormorant Garamond, value: "'Cormorant Garamond', Georgia, serif" }
+              - { label: Libre Baskerville, value: "'Libre Baskerville', Georgia, serif" }
+              - { label: Lora, value: "'Lora', Georgia, serif" }
+              - { label: Great Vibes (script), value: "'Great Vibes', cursive" }
+              - { label: Pacifico (script), value: "'Pacifico', cursive" }
+              - { label: Poppins, value: "'Poppins', system-ui, sans-serif" }
+              - { label: Montserrat, value: "'Montserrat', system-ui, sans-serif" }
+              - { label: DM Sans, value: "'DM Sans', system-ui, sans-serif" }
+              - { label: Raleway, value: "'Raleway', system-ui, sans-serif" }
+              - { label: Oswald, value: "'Oswald', system-ui, sans-serif" }
+              - { label: Georgia, value: "Georgia, serif" }
+              - { label: System UI, value: "system-ui, sans-serif" }
           - {
               label: Custom font · intro subtitle,
               name: fontIntroSubtitleCustom,
@@ -168,7 +190,27 @@ collections:
           - label: Font · friends section title
             name: fontFriendsTitle
             widget: select
-            options: *font_presets
+            options:
+              - {
+                  label: Playfair Display,
+                  value: "'Playfair Display', Georgia, serif",
+                }
+              - {
+                  label: Fraunces,
+                  value: "'Fraunces', 'Palatino Linotype', serif",
+                }
+              - { label: Cormorant Garamond, value: "'Cormorant Garamond', Georgia, serif" }
+              - { label: Libre Baskerville, value: "'Libre Baskerville', Georgia, serif" }
+              - { label: Lora, value: "'Lora', Georgia, serif" }
+              - { label: Great Vibes (script), value: "'Great Vibes', cursive" }
+              - { label: Pacifico (script), value: "'Pacifico', cursive" }
+              - { label: Poppins, value: "'Poppins', system-ui, sans-serif" }
+              - { label: Montserrat, value: "'Montserrat', system-ui, sans-serif" }
+              - { label: DM Sans, value: "'DM Sans', system-ui, sans-serif" }
+              - { label: Raleway, value: "'Raleway', system-ui, sans-serif" }
+              - { label: Oswald, value: "'Oswald', system-ui, sans-serif" }
+              - { label: Georgia, value: "Georgia, serif" }
+              - { label: System UI, value: "system-ui, sans-serif" }
           - {
               label: Custom font · friends title,
               name: fontFriendsTitleCustom,
@@ -178,7 +220,27 @@ collections:
           - label: Font · friends hint
             name: fontFriendsHint
             widget: select
-            options: *font_presets
+            options:
+              - {
+                  label: Playfair Display,
+                  value: "'Playfair Display', Georgia, serif",
+                }
+              - {
+                  label: Fraunces,
+                  value: "'Fraunces', 'Palatino Linotype', serif",
+                }
+              - { label: Cormorant Garamond, value: "'Cormorant Garamond', Georgia, serif" }
+              - { label: Libre Baskerville, value: "'Libre Baskerville', Georgia, serif" }
+              - { label: Lora, value: "'Lora', Georgia, serif" }
+              - { label: Great Vibes (script), value: "'Great Vibes', cursive" }
+              - { label: Pacifico (script), value: "'Pacifico', cursive" }
+              - { label: Poppins, value: "'Poppins', system-ui, sans-serif" }
+              - { label: Montserrat, value: "'Montserrat', system-ui, sans-serif" }
+              - { label: DM Sans, value: "'DM Sans', system-ui, sans-serif" }
+              - { label: Raleway, value: "'Raleway', system-ui, sans-serif" }
+              - { label: Oswald, value: "'Oswald', system-ui, sans-serif" }
+              - { label: Georgia, value: "Georgia, serif" }
+              - { label: System UI, value: "system-ui, sans-serif" }
           - {
               label: Custom font · friends hint,
               name: fontFriendsHintCustom,
@@ -296,7 +358,27 @@ collections:
           - label: Font · modal name
             name: fontModalTitle
             widget: select
-            options: *font_presets
+            options:
+              - {
+                  label: Playfair Display,
+                  value: "'Playfair Display', Georgia, serif",
+                }
+              - {
+                  label: Fraunces,
+                  value: "'Fraunces', 'Palatino Linotype', serif",
+                }
+              - { label: Cormorant Garamond, value: "'Cormorant Garamond', Georgia, serif" }
+              - { label: Libre Baskerville, value: "'Libre Baskerville', Georgia, serif" }
+              - { label: Lora, value: "'Lora', Georgia, serif" }
+              - { label: Great Vibes (script), value: "'Great Vibes', cursive" }
+              - { label: Pacifico (script), value: "'Pacifico', cursive" }
+              - { label: Poppins, value: "'Poppins', system-ui, sans-serif" }
+              - { label: Montserrat, value: "'Montserrat', system-ui, sans-serif" }
+              - { label: DM Sans, value: "'DM Sans', system-ui, sans-serif" }
+              - { label: Raleway, value: "'Raleway', system-ui, sans-serif" }
+              - { label: Oswald, value: "'Oswald', system-ui, sans-serif" }
+              - { label: Georgia, value: "Georgia, serif" }
+              - { label: System UI, value: "system-ui, sans-serif" }
           - {
               label: Custom font · modal name,
               name: fontModalTitleCustom,
@@ -306,7 +388,27 @@ collections:
           - label: Font · modal note
             name: fontModalNote
             widget: select
-            options: *font_presets
+            options:
+              - {
+                  label: Playfair Display,
+                  value: "'Playfair Display', Georgia, serif",
+                }
+              - {
+                  label: Fraunces,
+                  value: "'Fraunces', 'Palatino Linotype', serif",
+                }
+              - { label: Cormorant Garamond, value: "'Cormorant Garamond', Georgia, serif" }
+              - { label: Libre Baskerville, value: "'Libre Baskerville', Georgia, serif" }
+              - { label: Lora, value: "'Lora', Georgia, serif" }
+              - { label: Great Vibes (script), value: "'Great Vibes', cursive" }
+              - { label: Pacifico (script), value: "'Pacifico', cursive" }
+              - { label: Poppins, value: "'Poppins', system-ui, sans-serif" }
+              - { label: Montserrat, value: "'Montserrat', system-ui, sans-serif" }
+              - { label: DM Sans, value: "'DM Sans', system-ui, sans-serif" }
+              - { label: Raleway, value: "'Raleway', system-ui, sans-serif" }
+              - { label: Oswald, value: "'Oswald', system-ui, sans-serif" }
+              - { label: Georgia, value: "Georgia, serif" }
+              - { label: System UI, value: "system-ui, sans-serif" }
           - {
               label: Custom font · modal note,
               name: fontModalNoteCustom,
@@ -316,7 +418,27 @@ collections:
           - label: Font · song title / artist
             name: fontModalTrack
             widget: select
-            options: *font_presets
+            options:
+              - {
+                  label: Playfair Display,
+                  value: "'Playfair Display', Georgia, serif",
+                }
+              - {
+                  label: Fraunces,
+                  value: "'Fraunces', 'Palatino Linotype', serif",
+                }
+              - { label: Cormorant Garamond, value: "'Cormorant Garamond', Georgia, serif" }
+              - { label: Libre Baskerville, value: "'Libre Baskerville', Georgia, serif" }
+              - { label: Lora, value: "'Lora', Georgia, serif" }
+              - { label: Great Vibes (script), value: "'Great Vibes', cursive" }
+              - { label: Pacifico (script), value: "'Pacifico', cursive" }
+              - { label: Poppins, value: "'Poppins', system-ui, sans-serif" }
+              - { label: Montserrat, value: "'Montserrat', system-ui, sans-serif" }
+              - { label: DM Sans, value: "'DM Sans', system-ui, sans-serif" }
+              - { label: Raleway, value: "'Raleway', system-ui, sans-serif" }
+              - { label: Oswald, value: "'Oswald', system-ui, sans-serif" }
+              - { label: Georgia, value: "Georgia, serif" }
+              - { label: System UI, value: "system-ui, sans-serif" }
           - {
               label: Custom font · song info,
               name: fontModalTrackCustom,
