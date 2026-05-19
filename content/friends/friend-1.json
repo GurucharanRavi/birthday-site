@@ -1,0 +1,11 @@
+{
+  "name": "Friend 1",
+  "slug": "friend-1",
+  "order": 1,
+  "photo": "",
+  "note": "Replace this note in the admin (or in this file before admin is wired).",
+  "song": "",
+  "songTitle": "Song title",
+  "songArtist": "Artist",
+  "discImage": ""
+}

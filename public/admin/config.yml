@@ -1,0 +1,152 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: public/uploads
+public_folder: /uploads
+
+collections:
+  - name: settings
+    label: "Site · look & feel"
+    files:
+      - label: Global settings
+        name: global
+        file: content/settings.json
+        fields:
+          - { label: Browser tab title, name: documentTitle, widget: string }
+          - { label: Intro big title, name: introTitle, widget: string }
+          - { label: Intro subtitle, name: introSubtitle, widget: string }
+          - {
+              label: Intro duration (milliseconds),
+              name: introDurationMs,
+              widget: number,
+              value_type: int,
+              min: 1500,
+              max: 12000,
+              step: 100,
+            }
+          - label: Intro motion style
+            name: introAnimation
+            widget: select
+            options:
+              - { label: Fade + gentle scale, value: fade-scale }
+              - { label: Fade only, value: fade }
+              - { label: Slide up, value: slide-up }
+          - { label: Confetti on enter, name: confettiEnabled, widget: boolean }
+          - label: Confetti amount
+            name: confettiIntensity
+            widget: select
+            options:
+              - { label: Light, value: light }
+              - { label: Medium, value: medium }
+              - { label: Heavy, value: heavy }
+          - { label: Background image, name: backgroundImage, widget: image, required: false }
+          - {
+              label: Background blur (px),
+              name: backgroundBlurPx,
+              widget: number,
+              value_type: int,
+              min: 0,
+              max: 24,
+              step: 1,
+            }
+          - {
+              label: Dark overlay (CSS color / rgba),
+              name: overlayTint,
+              widget: string,
+              hint: "Example rgba(15,23,42,0.55)",
+            }
+          - label: Heading font stack
+            name: fontHeading
+            widget: select
+            options:
+              - {
+                  label: Playfair Display,
+                  value: "'Playfair Display', Georgia, serif",
+                }
+              - {
+                  label: Fraunces,
+                  value: "'Fraunces', 'Palatino Linotype', serif",
+                }
+              - { label: Georgia, value: "Georgia, serif" }
+              - { label: System serif, value: "ui-serif, Georgia, serif" }
+          - label: Body font stack
+            name: fontBody
+            widget: select
+            options:
+              - {
+                  label: DM Sans,
+                  value: "'DM Sans', system-ui, sans-serif",
+                }
+              - { label: System UI, value: "system-ui, sans-serif" }
+          - { label: Accent color, name: accentColor, widget: string }
+          - { label: Second accent, name: accentColor2, widget: string }
+          - { label: Card / modal surface tint, name: surfaceColor, widget: string }
+          - { label: Text on cards, name: textOnSurface, widget: string }
+          - { label: Avatar ring color, name: avatarRingColor, widget: string }
+          - {
+              label: Avatar size (px),
+              name: avatarSizePx,
+              widget: number,
+              value_type: int,
+              min: 64,
+              max: 160,
+              step: 4,
+            }
+          - {
+              label: Space between avatars (px),
+              name: gridGapPx,
+              widget: number,
+              value_type: int,
+              min: 8,
+              max: 48,
+              step: 2,
+            }
+          - { label: Modal frosted blur, name: modalBackdropBlur, widget: boolean }
+          - label: Modal style
+            name: modalStyle
+            widget: select
+            options:
+              - { label: Glass, value: glass }
+              - { label: Solid, value: solid }
+          - {
+              label: Vinyl spin loop (seconds per rotation),
+              name: vinylSpinDurationSec,
+              widget: number,
+              value_type: float,
+              min: 1,
+              max: 12,
+              step: 0.25,
+            }
+          - { label: Vinyl idle pulse, name: vinylIdlePulse, widget: boolean }
+
+  - name: friends
+    label: Friends
+    folder: content/friends
+    create: true
+    slug: "{{slug}}"
+    identifier_field: slug
+    summary: "{{name}} · order {{order}}"
+    fields:
+      - { label: Display name, name: name, widget: string }
+      - { label: URL slug (no spaces), name: slug, widget: string, hint: "e.g. alex" }
+      - {
+          label: Order (1 = first),
+          name: order,
+          widget: number,
+          value_type: int,
+          min: 1,
+          max: 10,
+          step: 1,
+        }
+      - { label: Face photo, name: photo, widget: image, required: false }
+      - { label: Personal note, name: note, widget: text }
+      - { label: Dedicated song file, name: song, widget: file, required: false }
+      - { label: Song title (shown in player), name: songTitle, widget: string }
+      - { label: Artist (optional), name: songArtist, widget: string, required: false }
+      - {
+          label: Custom disc label image,
+          name: discImage,
+          widget: image,
+          required: false,
+        }
