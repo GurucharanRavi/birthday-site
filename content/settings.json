@@ -32,7 +32,7 @@
   "vinylIdlePulse": true,
   "introAnimation": "slide-up",
   "gridGapPx": 24,
-  "avatarSizePreset": "xl",
+  "avatarSizePreset": "xxl",
   "accentColor": "#f9a8d4",
   "confettiEnabled": true,
   "accentColor2": "#a5b4fc",
@@ -45,6 +45,6 @@
   "backgroundBlurPx": 8,
   "fontModalTrackCustom": "",
   "fontFriendsHintCustom": "",
-  "friendsLayout": "wrap",
+  "friendsLayout": "ring",
   "friendsMaxWidthPx": 0
 }
