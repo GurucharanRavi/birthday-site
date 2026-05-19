@@ -1,5 +1,23 @@
 import settingsJson from "../content/settings.json";
-import type { SiteSettings } from "./types";
+import type { FriendsLayout, SiteSettings } from "./types";
+
+function normalizeLayout(layout?: string): FriendsLayout {
+  if (layout === "single-row") return "row";
+  const allowed: FriendsLayout[] = [
+    "wrap",
+    "column",
+    "row",
+    "pentagon-up",
+    "pentagon-down",
+    "ring",
+    "cross",
+    "arc",
+  ];
+  if (layout && allowed.includes(layout as FriendsLayout)) {
+    return layout as FriendsLayout;
+  }
+  return "wrap";
+}
 
 const defaults: SiteSettings = {
   documentTitle: "Happy Birthday",
@@ -7,6 +25,8 @@ const defaults: SiteSettings = {
   introSubtitle: "",
   introDurationMs: 3800,
   introAnimation: "fade-scale",
+  introExitAnimation: "fade",
+  introExitDurationMs: 700,
   confettiEnabled: true,
   confettiIntensity: "medium",
   backgroundImage: "",
@@ -39,8 +59,13 @@ const defaults: SiteSettings = {
   surfaceColor: "rgba(15, 23, 42, 0.82)",
   textOnSurface: "#f8fafc",
   avatarRingColor: "#ffffff",
+  avatarSizing: "responsive",
   avatarSizePx: 104,
+  avatarSizeMinPx: 72,
+  avatarSizeMaxPx: 168,
   gridGapPx: 20,
+  gridGapMinPx: 10,
+  gridGapMaxPx: 48,
   modalBackdropBlur: true,
   modalStyle: "glass",
   vinylSpinDurationSec: 4,
@@ -65,7 +90,14 @@ export function getSettings(): SiteSettings {
     fontModalTrack: s.fontModalTrack ?? s.fontBody ?? defaults.fontModalTrack,
     friendsPageTitle: s.friendsPageTitle ?? "",
     friendsPageHint: s.friendsPageHint ?? "",
-    friendsLayout: s.friendsLayout ?? defaults.friendsLayout,
+    friendsLayout: normalizeLayout(s.friendsLayout),
+    introExitAnimation: s.introExitAnimation ?? defaults.introExitAnimation,
+    introExitDurationMs: s.introExitDurationMs ?? defaults.introExitDurationMs,
+    avatarSizing: s.avatarSizing ?? defaults.avatarSizing,
+    avatarSizeMinPx: s.avatarSizeMinPx ?? defaults.avatarSizeMinPx,
+    avatarSizeMaxPx: s.avatarSizeMaxPx ?? defaults.avatarSizeMaxPx,
+    gridGapMinPx: s.gridGapMinPx ?? defaults.gridGapMinPx,
+    gridGapMaxPx: s.gridGapMaxPx ?? defaults.gridGapMaxPx,
     friendsJustify: s.friendsJustify ?? defaults.friendsJustify,
     friendsOffsetYVh: s.friendsOffsetYVh ?? defaults.friendsOffsetYVh,
     friendsMaxWidthPx: s.friendsMaxWidthPx ?? defaults.friendsMaxWidthPx,

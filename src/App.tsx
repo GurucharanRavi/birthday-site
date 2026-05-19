@@ -8,6 +8,7 @@ import {
 } from "react";
 import confetti from "canvas-confetti";
 import type { ConfettiIntensity, Friend, SiteSettings } from "./types";
+import { FriendsGrid } from "./FriendsGrid";
 import { getSettings } from "./settings";
 import { hasText, objectPosition, resolveFont } from "./utils";
 import "./App.css";
@@ -61,14 +62,10 @@ function fireConfetti(intensity: ConfettiIntensity) {
   }, 260);
 }
 
-function layoutClass(layout: SiteSettings["friendsLayout"]) {
-  if (layout === "single-row") return "face-grid--row";
-  if (layout === "column") return "face-grid--column";
-  return "face-grid--wrap";
-}
+type Phase = "intro" | "intro-out" | "main";
 
 export default function App() {
-  const [phase, setPhase] = useState<"intro" | "main">("intro");
+  const [phase, setPhase] = useState<Phase>("intro");
   const [active, setActive] = useState<Friend | null>(null);
   const introTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -95,13 +92,28 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const exitMs =
+      settings.introExitAnimation === "none" ? 0 : settings.introExitDurationMs;
+    const holdMs = Math.max(800, settings.introDurationMs - exitMs);
+
     introTimer.current = window.setTimeout(() => {
-      setPhase("main");
-    }, settings.introDurationMs);
+      if (exitMs <= 0) setPhase("main");
+      else setPhase("intro-out");
+    }, holdMs);
+
     return () => {
       if (introTimer.current) window.clearTimeout(introTimer.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (phase !== "intro-out") return;
+    const t = window.setTimeout(
+      () => setPhase("main"),
+      settings.introExitDurationMs,
+    );
+    return () => window.clearTimeout(t);
+  }, [phase]);
 
   useEffect(() => {
     if (phase === "intro") setActive(null);
@@ -159,6 +171,15 @@ export default function App() {
         "--friends-justify": settings.friendsJustify,
         "--friends-max-width": `${settings.friendsMaxWidthPx}px`,
         "--friends-offset-y": `${settings.friendsOffsetYVh}vh`,
+        "--intro-exit-dur": `${settings.introExitDurationMs}ms`,
+        "--avatar-size":
+          settings.avatarSizing === "responsive"
+            ? `clamp(${settings.avatarSizeMinPx}px, 11vmin, ${settings.avatarSizeMaxPx}px)`
+            : `${settings.avatarSizePx}px`,
+        "--grid-gap":
+          settings.avatarSizing === "responsive"
+            ? `clamp(${settings.gridGapMinPx}px, 2.5vmin, ${settings.gridGapMaxPx}px)`
+            : `${settings.gridGapPx}px`,
       }) as CSSProperties,
     [],
   );
@@ -198,8 +219,21 @@ export default function App() {
       />
       <div className="site-overlay" aria-hidden />
 
-      {phase === "intro" ? (
-        <div className={`intro-root ${introClass}`} role="status" aria-live="polite">
+      {phase === "intro" || phase === "intro-out" ? (
+        <div
+          className={[
+            "intro-root",
+            introClass,
+            phase === "intro-out" ? "intro-root--out" : "",
+            phase === "intro-out"
+              ? `intro-root--out-${settings.introExitAnimation}`
+              : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+          role="status"
+          aria-live="polite"
+        >
           <div className="intro-inner">
             {showIntroTitle ? (
               <h1 className="intro-title">{settings.introTitle.trim()}</h1>
@@ -212,7 +246,7 @@ export default function App() {
       ) : null}
 
       {phase === "main" ? (
-        <main className="page">
+        <main className="page page--enter">
           <div className="page__content">
             {showFriendsTitle ? (
               <h2 className="page__title">{settings.friendsPageTitle.trim()}</h2>
@@ -220,32 +254,12 @@ export default function App() {
             {showFriendsHint ? (
               <p className="page__hint">{settings.friendsPageHint.trim()}</p>
             ) : null}
-            <div className={`face-grid ${layoutClass(settings.friendsLayout)}`}>
-              {friends.map((f) => (
-                <button
-                  key={f.slug}
-                  type="button"
-                  className="face-button"
-                  onClick={() => setActive(f)}
-                  aria-label={`Open message from ${f.name || f.slug}`}
-                >
-                  {f.photo ? (
-                    <img
-                      className="face"
-                      src={f.photo}
-                      alt=""
-                      style={{
-                        objectPosition: objectPosition(f.photoFocusX, f.photoFocusY),
-                      }}
-                    />
-                  ) : (
-                    <span className="face-placeholder" aria-hidden>
-                      {initials(f.name || f.slug)}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
+            <FriendsGrid
+              friends={friends}
+              layout={settings.friendsLayout}
+              onSelect={setActive}
+              initials={initials}
+            />
           </div>
         </main>
       ) : null}

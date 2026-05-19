@@ -16,9 +16,20 @@ export type Friend = {
 };
 
 export type IntroAnimation = "fade-scale" | "fade" | "slide-up";
+export type IntroExitAnimation = "fade" | "fade-scale" | "slide-down" | "none";
 export type ConfettiIntensity = "light" | "medium" | "heavy";
 export type ModalStyle = "glass" | "solid";
-export type FriendsLayout = "wrap" | "single-row" | "column";
+export type AvatarSizing = "fixed" | "responsive";
+export type FriendsLayout =
+  | "wrap"
+  | "column"
+  | "row"
+  | "single-row"
+  | "pentagon-up"
+  | "pentagon-down"
+  | "ring"
+  | "cross"
+  | "arc";
 export type FriendsJustify =
   | "center"
   | "flex-start"
@@ -32,6 +43,8 @@ export type SiteSettings = {
   introSubtitle: string;
   introDurationMs: number;
   introAnimation: IntroAnimation;
+  introExitAnimation: IntroExitAnimation;
+  introExitDurationMs: number;
   confettiEnabled: boolean;
   confettiIntensity: ConfettiIntensity;
   backgroundImage: string;
@@ -68,8 +81,13 @@ export type SiteSettings = {
   surfaceColor: string;
   textOnSurface: string;
   avatarRingColor: string;
+  avatarSizing: AvatarSizing;
   avatarSizePx: number;
+  avatarSizeMinPx: number;
+  avatarSizeMaxPx: number;
   gridGapPx: number;
+  gridGapMinPx: number;
+  gridGapMaxPx: number;
   modalBackdropBlur: boolean;
   modalStyle: ModalStyle;
   vinylSpinDurationSec: number;

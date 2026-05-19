@@ -48,6 +48,23 @@ collections:
               - { label: Fade + gentle scale, value: fade-scale }
               - { label: Fade only, value: fade }
               - { label: Slide up, value: slide-up }
+          - label: Intro exit (after opening)
+            name: introExitAnimation
+            widget: select
+            options:
+              - { label: Fade out, value: fade }
+              - { label: Fade + slight zoom, value: fade-scale }
+              - { label: Slide down + fade, value: slide-down }
+              - { label: Instant (no exit), value: none }
+          - {
+              label: Intro exit duration (milliseconds),
+              name: introExitDurationMs,
+              widget: number,
+              value_type: int,
+              min: 200,
+              max: 3000,
+              step: 50,
+            }
           - { label: Confetti during intro, name: confettiEnabled, widget: boolean }
           - label: Confetti amount
             name: confettiIntensity
@@ -173,8 +190,16 @@ collections:
             widget: select
             options:
               - { label: Wrapped grid (default), value: wrap }
-              - { label: Single horizontal row (scroll on small screens), value: single-row }
+              - {
+                  label: Horizontal row (wraps on desktop, scrolls only on phones),
+                  value: row,
+                }
               - { label: Vertical column, value: column }
+              - { label: Pentagon · point up (5 friends), value: pentagon-up }
+              - { label: Pentagon · point down (5 friends), value: pentagon-down }
+              - { label: Circle ring (5 friends), value: ring }
+              - { label: Plus / cross (5 friends), value: cross }
+              - { label: Arc across top (5 friends), value: arc }
           - label: Horizontal alignment of faces
             name: friendsJustify
             widget: select
@@ -203,22 +228,67 @@ collections:
               max: 1200,
               step: 20,
             }
+          - label: Avatar sizing
+            name: avatarSizing
+            widget: select
+            options:
+              - {
+                  label: Responsive (scales with screen — recommended),
+                  value: responsive,
+                }
+              - { label: Fixed pixel size, value: fixed }
           - {
-              label: Avatar size (px),
+              label: Avatar size (px) — fixed mode, or target size,
               name: avatarSizePx,
               widget: number,
               value_type: int,
-              min: 64,
-              max: 160,
+              min: 48,
+              max: 320,
               step: 4,
             }
           - {
-              label: Space between avatars (px),
+              label: Avatar min size (px) — responsive mode,
+              name: avatarSizeMinPx,
+              widget: number,
+              value_type: int,
+              min: 40,
+              max: 280,
+              step: 4,
+            }
+          - {
+              label: Avatar max size (px) — responsive mode,
+              name: avatarSizeMaxPx,
+              widget: number,
+              value_type: int,
+              min: 80,
+              max: 360,
+              step: 4,
+            }
+          - {
+              label: Gap between avatars (px) — fixed mode,
               name: gridGapPx,
               widget: number,
               value_type: int,
+              min: 0,
+              max: 120,
+              step: 2,
+            }
+          - {
+              label: Gap min (px) — responsive mode,
+              name: gridGapMinPx,
+              widget: number,
+              value_type: int,
+              min: 0,
+              max: 80,
+              step: 2,
+            }
+          - {
+              label: Gap max (px) — responsive mode,
+              name: gridGapMaxPx,
+              widget: number,
+              value_type: int,
               min: 8,
-              max: 48,
+              max: 120,
               step: 2,
             }
           - { label: Avatar ring color, name: avatarRingColor, widget: string, required: false }
