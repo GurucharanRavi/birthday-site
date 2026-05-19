@@ -207,163 +207,46 @@
 .face-grid {
   display: flex;
   gap: var(--grid-gap, 20px);
-  width: 100%;
-  max-width: var(--friends-max-width, 40rem);
-  justify-content: var(--friends-justify, center);
   align-items: center;
-}
-
-.face-grid--wrap {
-  flex-wrap: wrap;
-  flex-direction: row;
-}
-
-.face-grid--row {
-  flex-wrap: wrap;
-  flex-direction: row;
-  overflow: visible;
-  width: fit-content;
-  max-width: min(100%, var(--friends-max-width, 40rem));
+  justify-content: center;
   margin-inline: auto;
 }
 
-@media (max-width: 640px) {
-  .face-grid--row {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    max-width: 100%;
-    padding-bottom: 0.25rem;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
-  }
+/* Default: one row when the screen is wide enough, wraps on small phones */
+.face-grid--wrap {
+  flex-wrap: wrap;
+  flex-direction: row;
+  width: 100%;
+  max-width: var(--friends-band-max, 100%);
+}
+
+/* Always one horizontal line; scroll on narrow screens only */
+.face-grid--row {
+  flex-wrap: nowrap;
+  flex-direction: row;
+  width: 100%;
+  max-width: var(--friends-band-max, 100%);
+  overflow-x: auto;
+  padding-bottom: 0.35rem;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .face-grid--column {
   flex-direction: column;
   flex-wrap: nowrap;
+  width: auto;
+  max-width: 100%;
 }
 
-.face-grid--positioned {
+/* Pentagon + ring: real circular / polygon positions */
+.face-grid--shape {
   position: relative;
   display: block;
-  width: min(92vw, 26rem);
-  height: min(72vw, 22rem);
-  margin-inline: auto;
+  width: min(96vw, var(--friends-shape-size, 22rem));
+  height: min(96vw, var(--friends-shape-size, 22rem));
   max-width: none;
-}
-
-.face-grid--pentagon-up {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, auto);
-  gap: var(--grid-gap, 20px);
-  width: min(100%, 22rem);
-  max-width: var(--friends-max-width, 40rem);
-  margin-inline: auto;
-}
-
-.face-grid--pentagon-up .face-button:nth-child(1) {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: center;
-}
-.face-grid--pentagon-up .face-button:nth-child(2) {
-  grid-column: 1;
-  grid-row: 2;
-  justify-self: end;
-}
-.face-grid--pentagon-up .face-button:nth-child(3) {
-  grid-column: 3;
-  grid-row: 2;
-  justify-self: start;
-}
-.face-grid--pentagon-up .face-button:nth-child(4) {
-  grid-column: 1;
-  grid-row: 3;
-  justify-self: center;
-}
-.face-grid--pentagon-up .face-button:nth-child(5) {
-  grid-column: 3;
-  grid-row: 3;
-  justify-self: center;
-}
-
-.face-grid--pentagon-down {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, auto);
-  gap: var(--grid-gap, 20px);
-  width: min(100%, 22rem);
-  max-width: var(--friends-max-width, 40rem);
-  margin-inline: auto;
-}
-
-.face-grid--pentagon-down .face-button:nth-child(1) {
-  grid-column: 1;
-  grid-row: 1;
-  justify-self: center;
-}
-.face-grid--pentagon-down .face-button:nth-child(2) {
-  grid-column: 3;
-  grid-row: 1;
-  justify-self: center;
-}
-.face-grid--pentagon-down .face-button:nth-child(3) {
-  grid-column: 1;
-  grid-row: 2;
-  justify-self: end;
-}
-.face-grid--pentagon-down .face-button:nth-child(4) {
-  grid-column: 3;
-  grid-row: 2;
-  justify-self: start;
-}
-.face-grid--pentagon-down .face-button:nth-child(5) {
-  grid-column: 2;
-  grid-row: 3;
-  justify-self: center;
-}
-
-.face-grid--ring {
-  --ring-radius: min(30vw, 9.5rem);
-  width: min(92vw, calc(var(--ring-radius) * 2 + var(--avatar-size, 104px)));
-  height: min(92vw, calc(var(--ring-radius) * 2 + var(--avatar-size, 104px)));
-}
-
-.face-grid--cross {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, auto);
-  gap: var(--grid-gap, 20px);
-  width: min(100%, 20rem);
-  margin-inline: auto;
-}
-
-.face-grid--cross .face-button:nth-child(1) {
-  grid-column: 2;
-  grid-row: 1;
-}
-.face-grid--cross .face-button:nth-child(2) {
-  grid-column: 1;
-  grid-row: 2;
-}
-.face-grid--cross .face-button:nth-child(3) {
-  grid-column: 3;
-  grid-row: 2;
-}
-.face-grid--cross .face-button:nth-child(4) {
-  grid-column: 2;
-  grid-row: 2;
-}
-.face-grid--cross .face-button:nth-child(5) {
-  grid-column: 2;
-  grid-row: 3;
-}
-
-.face-grid--arc {
-  --arc-radius: min(28vw, 8.5rem);
-  width: min(95vw, calc(var(--arc-radius) * 2 + var(--avatar-size, 104px)));
-  height: min(50vw, calc(var(--arc-radius) + var(--avatar-size, 104px)));
+  flex: none;
 }
 
 .face-button {

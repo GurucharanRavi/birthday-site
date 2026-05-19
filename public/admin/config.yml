@@ -247,111 +247,77 @@ collections:
               widget: string,
               required: false,
             }
-          - label: Faces layout
+          - label: Face arrangement
             name: friendsLayout
             widget: select
+            hint: "Pentagon and ring need exactly 5 friends."
             options:
-              - { label: Wrapped grid (default), value: wrap }
               - {
-                  label: Horizontal row (wraps on desktop, scrolls only on phones),
+                  label: Auto row (fits all on one line when possible — recommended),
+                  value: wrap,
+                }
+              - {
+                  label: Single row (always one line, scroll on small phones),
                   value: row,
                 }
-              - { label: Vertical column, value: column }
-              - { label: Pentagon · point up (5 friends), value: pentagon-up }
-              - { label: Pentagon · point down (5 friends), value: pentagon-down }
+              - { label: Vertical stack, value: column }
+              - { label: Pentagon (5 friends), value: pentagon-up }
+              - { label: Pentagon upside-down (5 friends), value: pentagon-down }
               - { label: Circle ring (5 friends), value: ring }
-              - { label: Plus / cross (5 friends), value: cross }
-              - { label: Arc across top (5 friends), value: arc }
-          - label: Horizontal alignment of faces
-            name: friendsJustify
+          - label: Face size
+            name: avatarSizePreset
             widget: select
             options:
-              - { label: Center, value: center }
-              - { label: Left, value: flex-start }
-              - { label: Right, value: flex-end }
-              - { label: Space between, value: space-between }
-              - { label: Space around, value: space-around }
+              - { label: Small, value: sm }
+              - { label: Medium, value: md }
+              - { label: Large, value: lg }
+              - { label: Extra large, value: xl }
+              - { label: Extra extra large (~196px), value: xxl }
+              - { label: Custom (use px field below), value: custom }
           - {
-              label: Push faces down (vh),
-              name: friendsOffsetYVh,
-              widget: number,
-              value_type: int,
-              min: 0,
-              max: 45,
-              step: 1,
-              hint: "0 = vertically centered. Higher = lower on screen.",
-            }
-          - {
-              label: Max width of face group (px),
-              name: friendsMaxWidthPx,
-              widget: number,
-              value_type: int,
-              min: 280,
-              max: 1200,
-              step: 20,
-            }
-          - label: Avatar sizing
-            name: avatarSizing
-            widget: select
-            options:
-              - {
-                  label: Responsive (scales with screen — recommended),
-                  value: responsive,
-                }
-              - { label: Fixed pixel size, value: fixed }
-          - {
-              label: Avatar size (px) — fixed mode, or target size,
+              label: Custom face size (px),
               name: avatarSizePx,
               widget: number,
               value_type: int,
-              min: 48,
-              max: 320,
+              min: 56,
+              max: 220,
               step: 4,
+              hint: "Only used when Face size is Custom.",
             }
+          - label: Space between faces
+            name: friendsGapPreset
+            widget: select
+            options:
+              - { label: Cozy, value: cozy }
+              - { label: Normal, value: normal }
+              - { label: Roomy, value: roomy }
+              - { label: Custom (use px field below), value: custom }
           - {
-              label: Avatar min size (px) — responsive mode,
-              name: avatarSizeMinPx,
-              widget: number,
-              value_type: int,
-              min: 40,
-              max: 280,
-              step: 4,
-            }
-          - {
-              label: Avatar max size (px) — responsive mode,
-              name: avatarSizeMaxPx,
-              widget: number,
-              value_type: int,
-              min: 80,
-              max: 360,
-              step: 4,
-            }
-          - {
-              label: Gap between avatars (px) — fixed mode,
+              label: Custom gap (px),
               name: gridGapPx,
               widget: number,
               value_type: int,
               min: 0,
-              max: 120,
+              max: 64,
               step: 2,
+              hint: "Only used when Space between faces is Custom.",
             }
+          - label: How wide the group spreads
+            name: friendsSpread
+            widget: select
+            hint: "Auto = wide enough for every face on one row. Full = stretch across entire screen."
+            options:
+              - { label: Auto (recommended), value: auto }
+              - { label: Full screen width, value: full }
           - {
-              label: Gap min (px) — responsive mode,
-              name: gridGapMinPx,
+              label: Push faces down the page,
+              name: friendsOffsetYVh,
               widget: number,
               value_type: int,
               min: 0,
-              max: 80,
-              step: 2,
-            }
-          - {
-              label: Gap max (px) — responsive mode,
-              name: gridGapMaxPx,
-              widget: number,
-              value_type: int,
-              min: 8,
-              max: 120,
-              step: 2,
+              max: 40,
+              step: 1,
+              hint: "0 = centered vertically. Try 8–15 to move lower.",
             }
           - { label: Avatar ring color, name: avatarRingColor, widget: string, required: false }
 

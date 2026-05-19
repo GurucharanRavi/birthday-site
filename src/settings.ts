@@ -1,5 +1,6 @@
 import settingsJson from "../content/settings.json";
-import type { FriendsLayout, SiteSettings } from "./types";
+import { AVATAR_SIZE_PRESETS } from "./layoutSettings";
+import type { AvatarSizePreset, FriendsLayout, SiteSettings } from "./types";
 
 function normalizeLayout(layout?: string): FriendsLayout {
   if (layout === "single-row") return "row";
@@ -17,6 +18,19 @@ function normalizeLayout(layout?: string): FriendsLayout {
     return layout as FriendsLayout;
   }
   return "wrap";
+}
+
+function inferAvatarPreset(px: number): AvatarSizePreset {
+  let best: AvatarSizePreset = "custom";
+  let bestDiff = Infinity;
+  for (const [key, value] of Object.entries(AVATAR_SIZE_PRESETS)) {
+    const diff = Math.abs(px - value);
+    if (diff < bestDiff) {
+      bestDiff = diff;
+      best = key as AvatarSizePreset;
+    }
+  }
+  return bestDiff <= 8 ? best : "custom";
 }
 
 const defaults: SiteSettings = {
@@ -51,21 +65,19 @@ const defaults: SiteSettings = {
   friendsPageTitle: "",
   friendsPageHint: "",
   friendsLayout: "wrap",
+  avatarSizePreset: "md",
+  friendsGapPreset: "normal",
+  friendsSpread: "auto",
   friendsJustify: "center",
   friendsOffsetYVh: 0,
-  friendsMaxWidthPx: 640,
+  friendsMaxWidthPx: 0,
   accentColor: "#f9a8d4",
   accentColor2: "#a5b4fc",
   surfaceColor: "rgba(15, 23, 42, 0.82)",
   textOnSurface: "#f8fafc",
   avatarRingColor: "#ffffff",
-  avatarSizing: "responsive",
-  avatarSizePx: 104,
-  avatarSizeMinPx: 72,
-  avatarSizeMaxPx: 168,
+  avatarSizePx: 112,
   gridGapPx: 20,
-  gridGapMinPx: 10,
-  gridGapMaxPx: 48,
   modalBackdropBlur: true,
   modalStyle: "glass",
   vinylSpinDurationSec: 4,
@@ -76,7 +88,15 @@ export function getSettings(): SiteSettings {
   const s = settingsJson as SiteSettings & {
     fontHeading?: string;
     fontBody?: string;
+    avatarSizing?: string;
   };
+
+  const spread: SiteSettings["friendsSpread"] =
+    s.friendsSpread === "full" ? "full" : "auto";
+
+  const avatarSizePreset =
+    s.avatarSizePreset ??
+    (s.avatarSizePx ? inferAvatarPreset(s.avatarSizePx) : defaults.avatarSizePreset);
 
   return {
     ...defaults,
@@ -93,14 +113,12 @@ export function getSettings(): SiteSettings {
     friendsLayout: normalizeLayout(s.friendsLayout),
     introExitAnimation: s.introExitAnimation ?? defaults.introExitAnimation,
     introExitDurationMs: s.introExitDurationMs ?? defaults.introExitDurationMs,
-    avatarSizing: s.avatarSizing ?? defaults.avatarSizing,
-    avatarSizeMinPx: s.avatarSizeMinPx ?? defaults.avatarSizeMinPx,
-    avatarSizeMaxPx: s.avatarSizeMaxPx ?? defaults.avatarSizeMaxPx,
-    gridGapMinPx: s.gridGapMinPx ?? defaults.gridGapMinPx,
-    gridGapMaxPx: s.gridGapMaxPx ?? defaults.gridGapMaxPx,
+    avatarSizePreset,
+    friendsGapPreset: s.friendsGapPreset ?? defaults.friendsGapPreset,
+    friendsSpread: spread,
     friendsJustify: s.friendsJustify ?? defaults.friendsJustify,
     friendsOffsetYVh: s.friendsOffsetYVh ?? defaults.friendsOffsetYVh,
-    friendsMaxWidthPx: s.friendsMaxWidthPx ?? defaults.friendsMaxWidthPx,
+    friendsMaxWidthPx: s.friendsMaxWidthPx ?? 0,
     backgroundPositionX: s.backgroundPositionX ?? 50,
     backgroundPositionY: s.backgroundPositionY ?? 50,
   };

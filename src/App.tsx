@@ -9,6 +9,7 @@ import {
 import confetti from "canvas-confetti";
 import type { ConfettiIntensity, Friend, SiteSettings } from "./types";
 import { FriendsGrid } from "./FriendsGrid";
+import { friendsBandMaxWidth, resolveAvatarSizePx, resolveGridGapPx, shapeContainerSize } from "./layoutSettings";
 import { getSettings } from "./settings";
 import { hasText, objectPosition, resolveFont } from "./utils";
 import "./App.css";
@@ -128,8 +129,10 @@ export default function App() {
   }, []);
 
   const rootVars = useMemo(
-    () =>
-      ({
+    () => {
+      const avatarPx = resolveAvatarSizePx(settings);
+      const gapPx = resolveGridGapPx(settings);
+      return {
         "--font-intro-title": resolveFont(
           settings.fontIntroTitle,
           settings.fontIntroTitleCustom,
@@ -163,24 +166,18 @@ export default function App() {
         "--surface": settings.surfaceColor,
         "--text-on-surface": settings.textOnSurface,
         "--avatar-ring": settings.avatarRingColor,
-        "--avatar-size": `${settings.avatarSizePx}px`,
-        "--grid-gap": `${settings.gridGapPx}px`,
+        "--avatar-size": `${avatarPx}px`,
+        "--grid-gap": `${gapPx}px`,
         "--overlay-tint": settings.overlayTint,
         "--bg-blur": `${settings.backgroundBlurPx}px`,
         "--vinyl-spin": `${settings.vinylSpinDurationSec}s`,
         "--friends-justify": settings.friendsJustify,
-        "--friends-max-width": `${settings.friendsMaxWidthPx}px`,
+        "--friends-band-max": friendsBandMaxWidth(friends.length, settings),
+        "--friends-shape-size": shapeContainerSize(settings),
         "--friends-offset-y": `${settings.friendsOffsetYVh}vh`,
         "--intro-exit-dur": `${settings.introExitDurationMs}ms`,
-        "--avatar-size":
-          settings.avatarSizing === "responsive"
-            ? `clamp(${settings.avatarSizeMinPx}px, 11vmin, ${settings.avatarSizeMaxPx}px)`
-            : `${settings.avatarSizePx}px`,
-        "--grid-gap":
-          settings.avatarSizing === "responsive"
-            ? `clamp(${settings.gridGapMinPx}px, 2.5vmin, ${settings.gridGapMaxPx}px)`
-            : `${settings.gridGapPx}px`,
-      }) as CSSProperties,
+      } as CSSProperties;
+    },
     [],
   );
 

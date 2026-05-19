@@ -19,6 +19,10 @@ export type IntroAnimation = "fade-scale" | "fade" | "slide-up";
 export type IntroExitAnimation = "fade" | "fade-scale" | "slide-down" | "none";
 export type ConfettiIntensity = "light" | "medium" | "heavy";
 export type ModalStyle = "glass" | "solid";
+export type AvatarSizePreset = "sm" | "md" | "lg" | "xl" | "xxl" | "custom";
+export type FriendsGapPreset = "cozy" | "normal" | "roomy" | "custom";
+export type FriendsSpread = "auto" | "full";
+/** @deprecated kept for older settings.json */
 export type AvatarSizing = "fixed" | "responsive";
 export type FriendsLayout =
   | "wrap"
@@ -73,21 +77,27 @@ export type SiteSettings = {
   friendsPageTitle: string;
   friendsPageHint: string;
   friendsLayout: FriendsLayout;
+  avatarSizePreset: AvatarSizePreset;
+  friendsGapPreset: FriendsGapPreset;
+  friendsSpread: FriendsSpread;
+  /** @deprecated use avatarSizePreset — still used when preset is custom */
   friendsJustify: FriendsJustify;
   friendsOffsetYVh: number;
+  /** @deprecated use friendsSpread auto — 0 means auto */
   friendsMaxWidthPx: number;
   accentColor: string;
   accentColor2: string;
   surfaceColor: string;
   textOnSurface: string;
   avatarRingColor: string;
-  avatarSizing: AvatarSizing;
   avatarSizePx: number;
-  avatarSizeMinPx: number;
-  avatarSizeMaxPx: number;
   gridGapPx: number;
-  gridGapMinPx: number;
-  gridGapMaxPx: number;
+  /** @deprecated */
+  avatarSizing?: AvatarSizing;
+  avatarSizeMinPx?: number;
+  avatarSizeMaxPx?: number;
+  gridGapMinPx?: number;
+  gridGapMaxPx?: number;
   modalBackdropBlur: boolean;
   modalStyle: ModalStyle;
   vinylSpinDurationSec: number;
