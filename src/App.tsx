@@ -299,6 +299,35 @@ function FriendModal({
   const showSongTitle = hasText(friend.songTitle);
   const showArtist = hasText(friend.songArtist);
   const showTrackMeta = showSongTitle || showArtist;
+  const longNote = showNote && friend.note.trim().length > 280;
+
+  useEffect(() => {
+    const scrollY = window.scrollY;
+    const { style } = document.body;
+    const prev = {
+      position: style.position,
+      top: style.top,
+      left: style.left,
+      right: style.right,
+      overflow: style.overflow,
+      width: style.width,
+    };
+    style.position = "fixed";
+    style.top = `-${scrollY}px`;
+    style.left = "0";
+    style.right = "0";
+    style.width = "100%";
+    style.overflow = "hidden";
+    return () => {
+      style.position = prev.position;
+      style.top = prev.top;
+      style.left = prev.left;
+      style.right = prev.right;
+      style.overflow = prev.overflow;
+      style.width = prev.width;
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
 
   useEffect(() => {
     setPlaying(false);
@@ -349,7 +378,8 @@ function FriendModal({
   }, [friend.song]);
 
   const modalClass =
-    modalStyle === "solid" ? "modal modal--solid" : "modal modal--glass";
+    (modalStyle === "solid" ? "modal modal--solid" : "modal modal--glass") +
+    (longNote ? " modal--wide" : "");
   const backdropClass =
     "modal-backdrop" + (modalBackdropBlur ? " modal-backdrop--blur" : "");
 
@@ -386,7 +416,7 @@ function FriendModal({
         {showNote ? <p className="modal__note">{friend.note.trim()}</p> : null}
 
         <div className="player-row">
-          <div className="vinyl-wrap">
+          <div className={"turntable" + (playing ? " turntable--playing" : "")}>
             <button
               type="button"
               className={
@@ -419,6 +449,11 @@ function FriendModal({
               </span>
               <span className="vinyl__hole" aria-hidden />
             </button>
+            <span className="turntable__tonearm" aria-hidden>
+              <span className="turntable__tonearm-pivot" />
+              <span className="turntable__tonearm-bar" />
+              <span className="turntable__tonearm-head" />
+            </span>
           </div>
           {showTrackMeta ? (
             <div className="track-meta">
