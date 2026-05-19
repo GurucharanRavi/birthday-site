@@ -1,5 +1,5 @@
 {
-  "friendsGapPreset": "cozy",
+  "friendsGapPreset": "roomy",
   "fontModalNoteCustom": "",
   "backgroundPositionX": 50,
   "textOnSurface": "#f8fafc",
@@ -31,8 +31,8 @@
   "surfaceColor": "rgba(15, 23, 42, 0.82)",
   "vinylIdlePulse": true,
   "introAnimation": "slide-up",
-  "gridGapPx": 24,
-  "avatarSizePreset": "xl",
+  "gridGapPx": 32,
+  "avatarSizePreset": "xxl",
   "accentColor": "#f9a8d4",
   "confettiEnabled": true,
   "accentColor2": "#a5b4fc",
