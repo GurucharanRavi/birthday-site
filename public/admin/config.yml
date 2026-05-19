@@ -445,6 +445,8 @@ collections:
     folder: content/friends
     create: true
     slug: "{{slug}}"
+    extension: json
+    format: json
     identifier_field: slug
     summary: "{{name}} · order {{order}}"
     fields:
